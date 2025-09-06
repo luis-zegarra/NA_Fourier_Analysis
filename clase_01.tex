@@ -2,18 +2,127 @@
 % Lecture 01: Introduction
 % This file is intended to be included in the main document via \input
 
-Bienvenidos a la primera clase de este curso.
+Esta es una clase en analisis de Fourier. Esta rama de la matematica ocupa un lugar unico en la matematica. Muchas de las pregutnas del area insipiraron mucho del desrrollo de la matematica a lo largo del sigglo XX.
 
-\subsection{Motivation}
+Existan muchas aplicaciones de la teoria a otras areas. Por ejemplo, tenemos aplicaciones a la teoria de ecuaciones diferenciales parciales, a la teoria de numeros, a la teoria de probabilidad , etc.
 
-% Add motivation for the course or topic here.
+Aun mas, muchas areas existen debido a la teoria de Fourier. Por ejemplo, teoria de conjuntos y teoria de la medida. Explotaremos algunas de estas conexiones a lo largo del curso.
 
-\subsection{Key Concepts}
+Por otro lado, el analisis funcional, la teoria espectral, teoria de operadores, etc encuentran en la teoria de Fourier un campo de aplicacion natural y de ejemplos.
 
-% List and explain key concepts introduced in this lecture.
+Finalmente, la teoria de Fourier es una herramienta fundamental en muchas areas de la ingenieria y ciencias aplicadas. Por ejemplo, en procesamiento de señales, procesamiento de imagenes, etc. Pero el puente es biunivoco. Muchas ideas nuevas de la teoria de Fourier han sido inspiradas por problemas en ingenieria y ciencias aplicadas. 
 
-\subsection{Summary}
+\subsection{La ecuacion de onda}
 
-% Summarize the main points of the lecture.
+Empezaremos donde Bernoulli y Fourier empezaron. Vamos a explorar el fenomano de la cuerda vibrante.
 
-% End of lecture_01.tex
+Considere una cuerda de longitud $\pi$ con los extremos fijos como los de una guitarra. Vamos a describir su movimiento vibratorio en el tiempo a traves de una funcion $u(x,t)$, donde $x$ es la posicion a lo largo de la cuerda y $t$ es el tiempo. En otras palabras:
+\[
+   u: [0,\pi] \times [0,\infty) \to \RR \ , \ u(x,t) = \text{ desplazamiento vertical de la cuerda en el punto } x \text{ y tiempo } t.
+\]
+%insertar una imagen de una cuerda vibrante
+La cuerda esta hecha de materia, y por tanto, cada particula de la misma obedece la segunda ley de newton:
+\[
+   F= A m
+\]
+donde $F$ es la fuerza neta actuando sobre la particula, $m$ es la masa de la particula y $A$ es su aceleracion.
+
+Sabemos que la aceleracion de una particula en la posicion $x$ en tiempo $t$ esta dado por la segunda derivada de $u$ con respecto a $t$. Por tanto, tenemos que:
+\[
+   F = \partial^2_t u(x,t) m
+\]
+Por otro lado, la fuerza actuando sobre la particula en $x$ en tiempo $t$ la podemos obtener a partir de la curvatura de la cuerda en ese punto. Si la cuerda es muy curva, la fuerza sera grande, y si la cuerda es plana, la fuerza sera pequeña. La curvatura de la cuerda en el punto $x$ en tiempo $t$ esta dada por la segunda derivada de $u$ con respecto a $x$. Por tanto, tenemos que:
+\[
+   \partial^2_t u(x,t) m = \partial^2_x u(x,t)
+\]
+Matematicamente, la ecuacion que nos interesa realmente es:
+\[
+   \partial^2_t u(x,t) =  \partial^2_x u(x,t)
+\]
+mas conocida como la \vocab{ecuacion de onda}.
+
+El \vocab{problema de Cauchy} asociado a la ecuacion de onda es el siguiente:
+\begin{align*}
+   \partial^2_t u(x,t) &=  \partial^2_x u(x,t) \ , \ x \in [0,\pi], t > 0 \\
+   u(x,0) &= f(x) \ , \ x \in [0,\pi] \\
+   \partial_t u(x,0) &= g(x) \ , \ x \in [0,\pi] \\
+   f(0)&= f(\pi) = 0 \\
+   g(0)&= g(\pi) = 0
+\end{align*}
+donde $f$ y $g$ son funciones dadas que describen la posicion inicial y la velocidad inicial de la cuerda, respectivamente. Las ultimas dos condiciones son las condiciones de frontera, que describen que los extremos de la cuerda estan fijos.
+
+La meta de Bernoulli y Fourier era encontrar una formula explicita para la solucion $u(x,t)$ en terminos de $f$ y $g$.
+
+\subsubsection*{Solucion de D'Alembert}
+
+El primero en encontrar una solucion fue D'Alembert en 1747. Su idea fue extender la funcion $f$ de $[0,\pi]$ a $\RR$ de manera impar y periodica con periodo $2\pi$. Es decir, definimos:
+\[
+   \tilde{f}(x) = \begin{cases}
+      f(x) & x \in [0,\pi] \\
+      -f(-x) & x \in [-\pi,0] \\
+      \tilde{f}(x+2\pi) & x \in \RR
+   \end{cases} 
+\]
+y de manera similar definimos $\tilde{g}$. 
+%Imagen de este proceso.
+
+D'Alembert entonces propuso que la ecuacion de Cauchy se podia expresar como:
+\[
+   \partial^2_t u(x,t) -  \partial^2_x u(x,t)=0 \quad \iff \quad (\partial_t-\partial_x)(\partial_t+\partial_x)u = 0
+\]
+Aja! Estos operadores diferenciales son lineales que conmutan y en el caso de algebra lineal estariamos intentando encontrar el nucleo del producto de dos operadores lineales que conmutan. Luego, la opcion mas sencilla seria intentar calcular primero por separado el nucleo de cada operador. Es decir, resolver:
+\begin{align*}
+   (\partial_t-\partial_x)u &= 0 \\
+   (\partial_t+\partial_x)u &= 0
+\end{align*}
+Ambas ecuaciones son ecuaciones diferenciales parciales de primer orden que se pueden resolver usando el metodo de caracteristicas. La solucion general de la primera es $u(x,t) = F(x+t)$ y la solucion general de la segunda es $u(x,t) = G(x-t)$, donde $F$ y $G$ son funciones arbitrarias. Luego, la solucion general de la ecuacion de onda es:
+\[
+   u(x,t) = F(x+t) + G(x-t)
+\]
+
+Cual es la eleccion correcta de $F$ y $G$? Para explorar esto deberiamos usar las condiciones iniciales. 
+Usando la condicion inicial $u(x,0) = f(x)$, tenemos que:
+\[
+   u(x,0) = F(x) + G(x) = f(x)
+\]
+Usando la condicion inicial $\partial_t u(x,0) = g(x)$, tenemos que:
+\[
+   \partial_t u(x,0) = F'(x) - G'(x) = g(x)
+\]
+Estas dos ecuaciones son un sistema de ecuaciones funcionales que podemos resolver. Derivando la primera ecuacion y sumandola a la segunda, tenemos que:
+\[
+   2F'(x) = f'(x) + g(x) \implies F(x) = \frac{f(x)}{2} + \frac{1}{2}\int_0^x g(y) dy + C
+\]
+De manera similar, restando la segunda ecuacion de la primera, tenemos que:
+\[
+   2G'(x) = f'(x) - g(x) \implies G(x) = \frac{f'(x)}{2} - \frac{1}{2}\int_0^x g(y) dy + D
+\]
+Finalmente, tenemos las condiciones de forntera $f(0)=f(\pi)=0$ y $g(0)=g(\pi)=0$. Estas condiciones implican que $C+D=0$. Por tanto, la solucion de D'Alembert es:
+\[
+   u(x,t) = \frac{f(x+t) + f(x-t)}{2} + \frac{1}{2}\int_{x-t}^{x+t} g(y) dy
+\]
+Esta ultima expresion es llamada la \vocab{formula de D'Alembert}.
+
+Lamentablemente, esta solucion no es generalizable a dimensiones mayores, ni nos ayuda a responder preguntas sobre ottras EDPs. 
+
+\subsection{Una solucion mas sistematica: Fourier}
+
+La idea de Fourier, sugerida pro Bernoulli, fue descomponer la onda en ondas mas simples. Ignoremos por ahora la condiciones iniciales y de frontera, e intentemos encontrar algunas soluciones especiales.
+
+Supongamos que $u(x,t) = X(x)T(t)$, es decir, que la solucion es un producto de funciones de una sola variable. Entonces, la ecuacion de onda se convierte en:
+\[
+   X(x)T''(t) = X''(x)T(t)
+\]
+Formalmente tendriamos que:
+\[
+   \frac{T''(t)}{T(t)} = \frac{X''(x)}{X(x)} = \lambda
+\]
+Esto ultimo se debe que el lado izquierdo depende solo de $t$ y el lado derecho depende solo de $x$. Por tanto, ambos lados deben ser iguales a una constante $\lambda$.
+
+Esto nos da dos ecuaciones diferenciales ordinarias:
+\begin{align*}
+   T''(t) &= \lambda T(t) \\
+   X''(x) &= \lambda X(x)
+\end{align*}
+
+Este fue todo el punto. Reducimos el problema a una EDO que podemos resolver.
